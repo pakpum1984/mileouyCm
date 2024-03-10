@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mileout</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
+  crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    #container {
+      max-width: auto;
+      margin: 5vh auto;
+      border: 2px solid #ffffff;
+      /* สีน้ำเงิน สามารถเปลี่ยนสีได้ */
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+      /* เพิ่มเงาดำ */
+    }
+    .spinner-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%; /* ให้ Spinner ทำเต็มส่วนสูงของ #dataTable */
+    }
+
+  </style>
+</head>
+<body>
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">แก้ไขข้อมูล</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="myFormsave" onsubmit="saveData(event)" class="row g-2">
+       
+            <input type="text" class="form-control" id="editId" readonly hidden>
+
+          <div class="mb-1">
+            <label for="editNamebook" class="form-label">ชื่อผู้จอง:</label>
+            <input type="text" class="form-control" id="editNamebook" name="editNamebook">
+          </div>
+          <div class="mb-1">
+            <label for="editDepbook" class="form-label">แผนก:</label>
+            <input type="text" class="form-control" id="editDepbook" name="editDepbook">
+          </div>
+          <div class="mb-1">
+            <label for="editCarbook" class="form-label">รถที่จอง</label>
+            <input type="text" class="form-control" id="editCarbook" name="editCarbook">
+          </div>
+          <div class="mb-1">
+            <label for="editLocabook" class="form-label">สถานที่ๆไปติดต่อ</label>
+            <input type="text" class="form-control" id="editLocabook" name="editLocabook">
+          </div>
+          <div class="mb-1">
+            <label for="editDateoutbook" class="form-label">วันที่ออก</label>
+            <input type="text" class="form-control" id="editDateoutbook" name="editDateoutbook">
+          </div>
+          <div class="mb-1">
+            <label for="editTimeoutbook" class="form-label">เวลาออก</label>
+            <input type="text" class="form-control" id="editTimeoutbook" name="editTimeoutbook">
+          </div>
+          <div class="mb-1">
+            <label for="editTimeinbook" class="form-label">เวลาเข้า</label>
+            <input type="text" class="form-control" id="editTimeinbook" name="editTimeinbook">
+          </div>
+          <div class="mb-1">
+            <label for="editDrivebook" class="form-label">สถานะการขับ</label>
+            <input type="text" class="form-control" id="editDrivebook" name="editDrivebook">
+          </div>
+          <div class="mb-1">
+            <label for="editOtherbook" class="form-label">อื่นๆ</label>
+            <input type="text" class="form-control" id="editOtherbook" name="editOtherbook">
+          </div>
+          <div class="mb-1">
+            <label for="editStatusbook" class="form-label">สถานะการจอง</label>
+            <input type="text" class="form-control" id="editStatusbook" name="editStatusbook">
+          </div>
+          <div class="mb-1">
+            <label for="editApproverbook" class="form-label">อนุมัติโดย</label>
+            <input type="text" class="form-control" id="editApproverbook" name="editApproverbook">
+          </div>
+          <div class="mb-1">
+            <label for="editDateout" class="form-label">วันที่ออก</label>
+            <input type="text" class="form-control" id="editDateout" name="editDateout">
+          </div>
+          <div class="mb-1">
+            <label for="editTimeout" class="form-label">เวลาออก</label>
+            <input type="text" class="form-control" id="editTimeout" name="editTimeout">
+          </div>
+          <div class="mb-1">
+            <label for="editMileout" class="form-label">เลขไมล์ออก</label>
+            <input type="text" class="form-control" id="editMileout" name="editMileout">
+          </div>
+          <div class="mb-1">
+            <label for="editDriver" class="form-label">ชื่อคนขับ</label>
+            <input type="text" class="form-control" id="editDriver" name="editDriver">
+          </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+        <button type="submit" class="btn btn-primary" onclick="saveData(event)">บันทึก</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="addDataModal" tabindex="-1" aria-labelledby="addDataModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addDataModalLabel">เพิ่มข้อมูล</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <!-- ฟอร์มเพิ่มข้อมูล -->
+          <form id="addDataForm" onsubmit="booksubmitForm()">
+         
+            <div class="mb-3">
+              <label for="addName" class="form-label">ชื่อ</label>
+              <input type="text" class="form-control" id="addName" name="addName">
+            </div>
+            <div class="mb-3">
+              <label for="addNickname" class="form-label">ชื่อเล่น</label>
+              <input type="text" class="form-control" id="addNickname" name="addNickname">
+            </div>
+            <div class="mb-3">
+              <label for="addNickname" class="form-label">เบอร์โทร</label>
+              <input type="text" class="form-control" id="addTel" name="addTel">
+            </div>
+         
+        </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+           <button type="submit" onclick="booksubmitForm()" class="btn btn-primary">บันทึก</button>
+         </div>
+         </form>
+      </div>
+    </div>
+  </div>
+
+ 
+
+     <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+       <div class="container-fluid">
+         <a class="navbar-brand" href="javascript:void(0)">DATATABLE FORM HTML</a>
+         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+           <span class="navbar-toggler-icon"></span>
+         </button>
+         <div class="collapse navbar-collapse" id="mynavbar">
+           <ul class="navbar-nav me-auto">
+             <!-- <li class="nav-item">
+               <a class="nav-link" href="javascript:void(0)">Link</a>
+             </li>
+             <li class="nav-item">
+               <a class="nav-link" href="javascript:void(0)">Link</a>
+             </li>
+             <li class="nav-item">
+               <a class="nav-link" href="javascript:void(0)">Link</a>
+             </li> -->
+           </ul>
+           <form class="d-flex">
+             <!-- <input class="form-control me-2" type="text" placeholder="Search"> -->
+             <button class="btn btn-warning" type="button">เพิ่มข้อมูล</button>
+           </form>
+         </div>
+       </div>
+     </nav>
+   <div class="container">
+    <div class="card table-responsive" id="container">
+    <table id="dataTable" class="table table-striped table-bordered">
+      <thead class="bg-success text-white">
+        <tr id="tableHeader"></tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+      </div>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- DataTables JavaScript -->
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+  <script>
+
+    // เมื่อคลิกที่ปุ่ม "เพิ่มข้อมูล"
+    $('.btn-warning').click(function() {
+      // รีเซ็ตค่าในฟอร์มเพื่อเตรียมการเพิ่มข้อมูลใหม่
+      $('#editId').val('');
+      $('#editNamebook').val('');
+      $('#editDepbook').val('');
+      $('#editCarbook').val('');
+      $('#editLocabook').val('');
+      $('#editDateoutbook').val('');
+      $('#editTimeoutbook').val('');
+      $('#editTimeinbook').val('');
+      $('#editDrivebook').val('');
+      $('#editOtherbook').val('');
+      $('#editStatusbook').val('');
+      $('#editApproverbook').val('');
+      $('#editDateout').val('');
+      $('#editTimeout').val('');
+      $('#editMileout').val('');
+      $('#editDriver').val('');
+
+      // แสดง modal เพื่อเพิ่มข้อมูล
+      $('#addDataModal').modal('show');
+    });
+
+    // เมื่อคลิกที่ปุ่ม "บันทึก" ใน modal เพื่อเพิ่มข้อมูล
+    $('#saveNewData').click(function() {
+      // เรียกใช้ฟังก์ชัน saveData() เพื่อบันทึกข้อมูล
+      saveNewData();
+    });
+
+
+    function booksubmitForm() {
+        event.preventDefault();
+        Swal.fire({
+            position: 'center',
+            title: '<h4>กำลังบันทึกข้อมูล...</h4>',
+            showConfirmButton: false,
+        });
+        Swal.showLoading();
+
+        // Fetch data from the form
+      
+      var editNamebook = document.getElementById('editNamebook').value;
+      var editDepbook = document.getElementById('editDepbook').value;
+      var editCarbook = document.getElementById('editCarbook').value;
+      var editLocabook = document.getElementById('editLocabook').value;
+      var editDateoutbook = document.getElementById('editDateoutbook').value;
+      var editTimeoutbook = document.getElementById('editTimeoutbook').value;
+      var editTimeinbook = document.getElementById('editTimeinbook').value;
+      var editDrivebook = document.getElementById('editDrivebook').value;
+      var editOtherbook = document.getElementById('editOtherbook').value;
+      var editStatusbook = document.getElementById('editStatusbook').value;
+      var editApproverbook = document.getElementById('editApproverbook').value;
+      var editDateout = document.getElementById('editDateout').value;
+      var editTimeout = document.getElementById('editTimeout').value;
+      var editMileout = document.getElementById('editMileout').value;
+      var editDriver = document.getElementById('editDriver').value;
+
+
+        if (addName == "") {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: '<h4>กรุณากรอกชื่อสกุลท่าน</h4>',
+          showConfirmButton: true,
+          confirmButtonText: 'OK',
+        });
+        return;
+      } else if (addNickname == "") {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: '<h4>กรุณากรอกชื่อเล่นของท่าน</h4>',
+          showConfirmButton: true,
+          confirmButtonText: 'OK',
+        });
+        return;
+      }  else if (addTel == "") {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: '<h4>กรุณากรอกเบอร์โทรของท่าน</h4>',
+          showConfirmButton: true,
+          confirmButtonText: 'OK',
+        });
+        return;
+      }
+      var formData = new FormData(document.getElementById("addDataForm"));
+      formData.append('action', 'submitFormadmin'); // เพิ่ม key "action" เพื่อบ่งบอกว่าเป็นการ submitForm
+       fetch(googleScriptUrl, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json()) // เปลี่ยนจาก response.text() เป็น response.json() เนื่องจากข้อมูลที่ส่งกลับมาเป็น JSON
+        .then(data => {
+            // Handle the successful response
+            console.log(data);
+            if (data == true) {
+              document.getElementById("addDataForm").reset();
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: '<h4>บันทึกข้อมูลสำเร็จ</h4>',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+              location.reload();
+            } else {
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: '<h4>มีการจองวันที่และช่วงเวลานี้แล้ว</h4>',
+                    showConfirmButton: true,
+                    confirmButtonText: 'OK',
+                });
+            }
+        })
+        .catch(error => {
+            // Handle the error
+            console.error('Error:', error);
+        });
+    }
+
+    
+    // เพิ่มฟังก์ชันเพื่อบันทึกข้อมูลใหม่
+    function saveNewData(event) {
+      event.preventDefault(); // หยุดการส่งค่าฟอร์มทางเบราว์เซอร์
+
+      // ดึงข้อมูลที่ป้อนจากฟอร์มใน modal
+      var id = $('#addId').val();
+      var name = $('#addName').val();
+      var nickname = $('#addNickname').val();
+      var telnum = $('#addTel').val();
+
+      // สร้าง JSON object ที่มีข้อมูลใหม่
+      var newData = {
+        'ไอดี': id,
+        'ชื่อ': name,
+        'ชื่อเล่น': nickname,
+        'เบอร์โทร': telnum
+      };
+
+      // แปลง JSON object เป็น string JSON
+      var jsonData = JSON.stringify(newData);
+
+      // ส่งข้อมูลใหม่ไปยัง Google Apps Script ผ่าน fetch
+      fetch('https://script.google.com/macros/s/AKfycbwQLkv0w7KE3cLbb1DBPwjvG0oWxt-vZmG8D4yzI4omfmSoOkDdsXsQFVbxz1-XCkXZOw/exec', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: jsonData
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('New data saved successfully:', data);
+        // ปิด modal เมื่อบันทึกข้อมูลเสร็จสิ้น
+        $('#addDataModal').modal('hide');
+        // รีโหลดหน้าเพื่อแสดงข้อมูลที่ถูกเพิ่ม
+        location.reload();
+      })
+      .catch(error => {
+        console.error('Error saving new data:', error);
+        // แสดงข้อความแจ้งเตือนหากเกิดข้อผิดพลาดในการบันทึกข้อมูล
+        alert('An error occurred while saving new data. Please try again later.');
+      });
+    }
+
+    // ใช้ jQuery เพื่อระบุเหตุการณ์ที่เกิดขึ้นเมื่อฟอร์มเพิ่มข้อมูลถูกส่ง
+    $(document).ready(function() {
+      $('#addDataForm').submit(saveNewData);
+    });
+
+    
+function editData(button) {
+  var index = $(button).data('index');
+  var row = $(button).data('row');
+  
+  // ตั้งค่าข้อมูลใน input ใน modal
+  $('#editId').val(row['ไอดี']);
+  $('#editNamebook').val(row['ชื่อผู้จอง']);
+  $('#editDepbook').val(row['แผนก']);
+   $('#editCarbook').val(row['รถที่จอง']);
+   $('#editLocabook').val(row['สถานที่ๆไปติดต่อ']);
+   $('#editDateoutbook').val(row['วันที่ออก']);
+   $('#editTimeoutbook').val(row['เวลาออก']);
+   $('#editTimeinbook').val(row['เวลาเข้า']);
+   $('#editDrivebook').val(row['สถานะการขับ']);
+   $('#editOtherbook').val(row['อื่นๆ']);
+   $('#editStatusbook').val(row['สถานะการจอง']);
+   $('#editApproverbook').val(row['อนุมัติโดย']);
+   // $('#editDateout').val(row['เบอร์โทร']);
+   // $('#editTimeout').val(row['เบอร์โทร']);
+   // $('#editMileout').val(row['เบอร์โทร']);
+   // $('#editDriver').val(row['เบอร์โทร']);
+  
+
+  // กำหนดค่า index ของแถวที่ต้องการแก้ไขให้กับ modal
+  $('#editModal').data('index', index);
+
+  // แสดง modal
+  $('#editModal').modal('show');
+}
+
+    function saveData(event) {
+      event.preventDefault(); // หยุดการส่งค่าฟอร์มทางเบราว์เซอร์
+    Swal.fire({
+            position: 'center',
+            title: '<h4>กำลังบันทึกข้อมูล...</h4>',
+            showConfirmButton: false,
+          })
+           Swal.showLoading()
+      // ดึงข้อมูลที่แก้ไขจาก input ใน modal
+      var editId = $('#editId').val();
+      var editNamebook = $('#editNamebook').val();
+      var editDepbook = $('#editDepbook').val();
+      var editCarbook = $('#editCarbook').val();
+      var editLocabook = $('#editLocabook').val();
+      var editDateoutbook = $('#editDateoutbook').val();
+      var editTimeoutbook = $('#editTimeoutbook').val();
+      var editTimeinbook = $('#editTimeinbook').val();
+      var editDrivebook = $('#editDrivebook').val();
+      var editOtherbook = $('#editOtherbook').val();
+      var editStatusbook = $('#editStatusbook').val();
+      var editApproverbook = $('#editApproverbook').val();
+      var editDateout = $('#editDateout').val();
+      var editTimeout = $('#editTimeout').val();
+      var editMileout = $('#editMileout').val();
+      var editDriver = $('#editDriver').val();
+
+      // สร้าง JSON object ที่มีข้อมูลที่แก้ไขแล้ว
+      var editedData = {
+        'ไอดี': editId,
+        'ชื่อผู้จอง': editNamebook,
+        'แผนก': editDepbook,
+        'รถที่จอง': editCarbook,
+        'สถานที่ๆไปติดต่อ': editLocabook,
+        'วันที่ออก': editDateoutbook,
+        'เวลาออก': editTimeoutbook,
+        'เวลาเข้า': editTimeinbook,
+        'สถานะการขับ': editDrivebook,
+        'อื่นๆ': editOtherbook,
+        'สถานะการจอง': editStatusbook,
+        'อนุมัติโดย': editApproverbook,
+        'วันที่ออก': editDateout,
+        'เวลาออก': editTimeout,
+        'เลขไมล์ออก': editMileout,
+        'ชื่อผู้ขับขี่': editDriver
+      };
+
+      // แปลง JSON object เป็น string JSON
+      var jsonData = JSON.stringify(editedData);
+
+      fetch(googleScriptUrl, {
+        method: 'POST',
+        body: jsonData // ข้อมูลที่แก้ไข
+      })
+      .then(response => response.json()) // เปลี่ยนจาก response.text() เป็น response.json() เนื่องจากข้อมูลที่ส่งกลับมาเป็น JSON
+      .then(data => {
+        document.getElementById("myFormsave").reset();
+       Swal.fire({
+  position: 'center',
+  icon: 'success',
+  title: 'แก้ไขข้อมูลเรียบร้อยแล้ว',
+  showConfirmButton: false,
+  timer: 2500
+})
+        console.log(data);
+        location.reload();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+    }
+
+
+
+
+
+
+
+
+    var googleScriptUrl = 'https://script.google.com/macros/s/AKfycbwQLkv0w7KE3cLbb1DBPwjvG0oWxt-vZmG8D4yzI4omfmSoOkDdsXsQFVbxz1-XCkXZOw/exec'; // ใส่ URL ของ Google Apps Script ที่คุณสร้าง
+$(document).ready(function() {
+  $('#dataTable').html('<div class="spinner-container"><div class="spinner-border text-info me-2" role="status"></div> กำลังโหลดข้อมูล...</div>');
+
+  $.ajax({
+    url: googleScriptUrl,
+    dataType: 'json',
+    success: function(data) {
+      // เมื่อโหลดข้อมูลเสร็จสิ้นซ่อน spinner
+      $('#dataTable').empty();
+
+      var headerRow = [
+        { title: 'ไอดี', visible: false },
+        { title: 'ชื่อผู้จอง' },
+        { title: 'แผนก' },
+        { title: 'รถที่จอง' },
+         { title: 'สถานที่ๆไปติดต่อ' },
+         { title: 'วันที่ออก' },
+         { title: 'เวลาออก' },
+         { title: 'เวลาเข้า' },
+         { title: 'สถานะการขับ' },
+         { title: 'อื่นๆ' },
+         { title: 'สถานะการจอง' },
+         { title: 'อนุมัติโดย' },
+        { title: 'แก้ไข' }
+       
+      ];
+      var tableRows = [];
+
+      $.each(data, function(index, row) {
+        var editButton = '<button type="button" onclick="editData(this);" class="btn btn-success edit-button" data-bs-toggle="modal" data-bs-target="#editModal" data-index="' + index + '" data-row=\'' + JSON.stringify(row) + '\'><i class="fa-solid fa-pen-to-square" style="color: white;"></i></button>';
+        var deleteButton = '<button type="button" onclick="deleteData(\'' + row['ไอดี'] + '\');" class="btn btn-danger delete-button"><i class="fa-solid fa-trash-can" style="color: white;"></i></button>';
+
+        var actionButtons = '<div class="btn-group" role="group">' + editButton + deleteButton + '</div>';
+
+        var rowData = [
+          row['ไอดี'],
+          row['ชื่อผู้จอง'],
+          row['แผนก'],
+          row['รถที่จอง'],
+          row['สถานที่ๆไปติดต่อ'],
+          row['วันที่ออก'],
+          row['เวลาออก'],
+          row['เวลาเข้า'],
+          row['สถานะการขับ'],
+          row['อื่นๆ'],
+          row['สถานะการจอง'],
+          row['อนุมัติโดย'],
+          actionButtons
+        ];
+        tableRows.push(rowData);
+      });
+
+      $('#dataTable').DataTable({
+        data: tableRows,
+        columns: headerRow,
+        dom: 't'
+      });
+    },
+    error: function(xhr, status, error) {
+      console.error('Error fetching data:', status, error);
+    }
+  });
+});
+
+
+    // ฟังก์ชั่น deleteData เพื่อลบข้อมูล
+    function deleteData(id) {
+      Swal.fire({
+        //title: "Are you sure?",
+        text: "คุณต้องการลบข้อมูลใช่หรือไม่!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "ใช่ต้องการลบข้อมูล"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+              position: 'center',
+              title: '<h4>กำลังลบข้อมูล...</h4>',
+              showConfirmButton: false,
+          });
+          Swal.showLoading();
+          // ส่งข้อมูล ID ที่ต้องการลบไปยัง Google Apps Script ผ่าน AJAX request
+          $.ajax({
+            url: googleScriptUrl, // URL ของ Google Apps Script
+            method: 'POST',
+            dataType: 'json',
+            data: { id: id }, // ส่งข้อมูล ID เพื่อลบ
+            success: function(response) {
+              if (response.success) {
+                Swal.fire({
+                  //title: "ลบข้อมูล",
+                  text: "ลบข้อมุลเรียบร้อยแล้ว",
+                  icon: "success"
+                }).then(() => {
+                  // รีโหลดหน้าหลังจากที่ข้อมูลถูกลบเรียบร้อย
+                  location.reload();
+                });
+              } else {
+                console.error('Error deleting data:', response.error);
+                alert('An error occurred while deleting data. Please try again later.');
+              }
+            },
+            error: function(xhr, status, error) {
+              console.error('Error deleting data:', status, error);
+              alert('An error occurred while deleting data. Please try again later.');
+            }
+          });
+        }
+      });
+    }
+
+
+
+
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
