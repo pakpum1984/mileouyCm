@@ -3,16 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mileout</title>
+  <title>DATATABLE FORM HTML</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
   integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
   crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://fonts.googleapis.com/css2?family=Prompt&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
   <!-- DataTables CSS -->
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
+    body {
+      font-family: "Prompt", sans-serif;
+      background-color: #f4f4f4;
+    }
     #container {
       max-width: auto;
       margin: 5vh auto;
@@ -29,15 +35,52 @@
       align-items: center;
       height: 100%; /* ให้ Spinner ทำเต็มส่วนสูงของ #dataTable */
     }
-
+   
   </style>
 </head>
 <body>
+
+    <nav class="navbar navbar-expand-lg navbar bg-primary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="##" style="color:white;">บันทึกไมล์ออก</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+    
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" style="color:white;" href="/carlendar.html">ปฏิทินจองรถ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" style="color:white;" href="/carlendarcus.html">ปฏิทินลูกค้า</a>
+            </li>
+    
+            <li class="nav-item">
+              <a class="nav-link" style="color:white;" href="/mileout.html">บันทึกไมล์ออก</a>
+            </li>
+          
+            <li class="nav-item">
+              <a class="nav-link" style="color:white;" href="/index.html">หน้าจองรถ</a>
+            </li>
+          </ul>
+          <form class="d-flex" role="search">
+            <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"> -->
+        <!-- <button type="button" onclick="logoutcar()" class="btn btn-danger"  style="margin-left: auto;">Logout</button> -->
+          </form>
+    
+        
+    
+          </div>
+        </div>
+      </nav>
+
+
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">แก้ไขข้อมูล</h5>
+        <h5 class="modal-title" id="exampleModalLabel">บันทึกเลขไมล์ออก</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -45,65 +88,58 @@
        
             <input type="text" class="form-control" id="editId" readonly hidden>
 
-          <div class="mb-1">
+         <div class="col-12 col-md-6 mb-2">
             <label for="editNamebook" class="form-label">ชื่อผู้จอง:</label>
-            <input type="text" class="form-control" id="editNamebook" name="editNamebook">
+            <input type="text" class="form-control" id="editNamebook" name="editNamebook" style="color: blue;">
           </div>
-          <div class="mb-1">
+          <div class="col-6 col-md-6 mb-2">
             <label for="editDepbook" class="form-label">แผนก:</label>
-            <input type="text" class="form-control" id="editDepbook" name="editDepbook">
+            <input type="text" class="form-control" id="editDepbook" name="editDepbook" style="color: blue;">
           </div>
-          <div class="mb-1">
+          <div class="col-6 col-md-6 mb-2">
             <label for="editCarbook" class="form-label">รถที่จอง</label>
-            <input type="text" class="form-control" id="editCarbook" name="editCarbook">
+            <input type="text" class="form-control" id="editCarbook" name="editCarbook" style="color: blue;">
           </div>
-          <div class="mb-1">
+          <div class="col-12 col-md-6 mb-2">
             <label for="editLocabook" class="form-label">สถานที่ๆไปติดต่อ</label>
-            <input type="text" class="form-control" id="editLocabook" name="editLocabook">
+            <input type="text" class="form-control" id="editLocabook" name="editLocabook" style="color: blue;">
           </div>
-          <div class="mb-1">
-            <label for="editDateoutbook" class="form-label">วันที่ออก</label>
-            <input type="text" class="form-control" id="editDateoutbook" name="editDateoutbook">
+
+            <input type="date" class="form-control" id="editDateoutbook" name="editDateoutbook" style="display: none;">
+
+            <input type="text" class="form-control" id="editTimeoutbook" name="editTimeoutbook" style="display: none;">
+
+            <input type="text" class="form-control" id="editTimeinbook" name="editTimeinbook" style="display: none;">
+     
+ 
+            <input type="text" class="form-control" id="editDrivebook" name="editDrivebook" style="display: none;">
+        
+
+
+            <input type="text" class="form-control" id="editStatusbook" name="editStatusbook" value="กำลังใช้งาน" style="display: none;">
+         
+     
+            <input type="text" class="form-control" id="editApproverbook" name="editApproverbook" style="display: none;">
+        
+          <div class="col-6 col-md-6 mb-2">
+            <label for="editDateout" class="form-label">วันที่ออก</label>
+            <input type="date" class="form-control" id="editDateout" name="editDateout" style="color: blue;">
           </div>
-          <div class="mb-1">
-            <label for="editTimeoutbook" class="form-label">เวลาออก</label>
-            <input type="text" class="form-control" id="editTimeoutbook" name="editTimeoutbook">
+         <div class="col-6 col-md-6 mb-2">
+            <label for="editTimeout" class="form-label">เวลาออก</label>
+            <input type="time" class="form-control" id="editTimeout" name="editTimeout" style="color: blue;">
           </div>
-          <div class="mb-1">
-            <label for="editTimeinbook" class="form-label">เวลาเข้า</label>
-            <input type="text" class="form-control" id="editTimeinbook" name="editTimeinbook">
+          <div class="col-6 col-md-6 mb-2">
+            <label for="editMileout" class="form-label">เลขไมล์ออก</label>
+            <input type="tel" class="form-control" id="editMileout" name="editMileout" style="color: blue;">
           </div>
-          <div class="mb-1">
-            <label for="editDrivebook" class="form-label">สถานะการขับ</label>
-            <input type="text" class="form-control" id="editDrivebook" name="editDrivebook">
+         <div class="col-6 col-md-6 mb-2">
+            <label for="editDriver" class="form-label">ชื่อคนขับ</label>
+            <input type="text" class="form-control" id="editDriver" name="editDriver" required>
           </div>
-          <div class="mb-1">
+          <div class="col-12 col-md-12 mb-2">
             <label for="editOtherbook" class="form-label">อื่นๆ</label>
             <input type="text" class="form-control" id="editOtherbook" name="editOtherbook">
-          </div>
-          <div class="mb-1">
-            <label for="editStatusbook" class="form-label">สถานะการจอง</label>
-            <input type="text" class="form-control" id="editStatusbook" name="editStatusbook">
-          </div>
-          <div class="mb-1">
-            <label for="editApproverbook" class="form-label">อนุมัติโดย</label>
-            <input type="text" class="form-control" id="editApproverbook" name="editApproverbook">
-          </div>
-          <div class="mb-1">
-            <label for="editDateout" class="form-label">วันที่ออก</label>
-            <input type="text" class="form-control" id="editDateout" name="editDateout">
-          </div>
-          <div class="mb-1">
-            <label for="editTimeout" class="form-label">เวลาออก</label>
-            <input type="text" class="form-control" id="editTimeout" name="editTimeout">
-          </div>
-          <div class="mb-1">
-            <label for="editMileout" class="form-label">เลขไมล์ออก</label>
-            <input type="text" class="form-control" id="editMileout" name="editMileout">
-          </div>
-          <div class="mb-1">
-            <label for="editDriver" class="form-label">ชื่อคนขับ</label>
-            <input type="text" class="form-control" id="editDriver" name="editDriver">
           </div>
       </div>
 
@@ -153,49 +189,25 @@
 
  
 
-     <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
-       <div class="container-fluid">
-         <a class="navbar-brand" href="javascript:void(0)">DATATABLE FORM HTML</a>
-         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
-           <span class="navbar-toggler-icon"></span>
-         </button>
-         <div class="collapse navbar-collapse" id="mynavbar">
-           <ul class="navbar-nav me-auto">
-             <!-- <li class="nav-item">
-               <a class="nav-link" href="javascript:void(0)">Link</a>
-             </li>
-             <li class="nav-item">
-               <a class="nav-link" href="javascript:void(0)">Link</a>
-             </li>
-             <li class="nav-item">
-               <a class="nav-link" href="javascript:void(0)">Link</a>
-             </li> -->
-           </ul>
-           <form class="d-flex">
-             <!-- <input class="form-control me-2" type="text" placeholder="Search"> -->
-             <button class="btn btn-warning" type="button">เพิ่มข้อมูล</button>
-           </form>
-         </div>
-       </div>
-     </nav>
-   <div class="container">
-    <div class="card table-responsive" id="container">
-    <table id="dataTable" class="table table-striped table-bordered">
+   <!-- <div class="container"> -->
+    <div class="container table-responsive mt-4" id="container1">
+    <table id="dataTable" class="table table-striped table-bordered" style="width:100%; font-size:12px;">
       <thead class="bg-success text-white">
         <tr id="tableHeader"></tr>
       </thead>
       <tbody id="tableBody"></tbody>
     </table>
+    <br>
   </div>
-      </div>
+      <!-- </div> -->
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <!-- DataTables JavaScript -->
   <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
   <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-
   <script>
+  
 
     // เมื่อคลิกที่ปุ่ม "เพิ่มข้อมูล"
     $('.btn-warning').click(function() {
@@ -221,11 +233,7 @@
       $('#addDataModal').modal('show');
     });
 
-    // เมื่อคลิกที่ปุ่ม "บันทึก" ใน modal เพื่อเพิ่มข้อมูล
-    $('#saveNewData').click(function() {
-      // เรียกใช้ฟังก์ชัน saveData() เพื่อบันทึกข้อมูล
-      saveNewData();
-    });
+  
 
 
     function booksubmitForm() {
@@ -256,34 +264,6 @@
       var editDriver = document.getElementById('editDriver').value;
 
 
-        if (addName == "") {
-        Swal.fire({
-          position: 'center',
-          icon: 'error',
-          title: '<h4>กรุณากรอกชื่อสกุลท่าน</h4>',
-          showConfirmButton: true,
-          confirmButtonText: 'OK',
-        });
-        return;
-      } else if (addNickname == "") {
-        Swal.fire({
-          position: 'center',
-          icon: 'error',
-          title: '<h4>กรุณากรอกชื่อเล่นของท่าน</h4>',
-          showConfirmButton: true,
-          confirmButtonText: 'OK',
-        });
-        return;
-      }  else if (addTel == "") {
-        Swal.fire({
-          position: 'center',
-          icon: 'error',
-          title: '<h4>กรุณากรอกเบอร์โทรของท่าน</h4>',
-          showConfirmButton: true,
-          confirmButtonText: 'OK',
-        });
-        return;
-      }
       var formData = new FormData(document.getElementById("addDataForm"));
       formData.append('action', 'submitFormadmin'); // เพิ่ม key "action" เพื่อบ่งบอกว่าเป็นการ submitForm
        fetch(googleScriptUrl, {
@@ -308,7 +288,7 @@
                 Swal.fire({
                     position: 'center',
                     icon: 'error',
-                    title: '<h4>มีการจองวันที่และช่วงเวลานี้แล้ว</h4>',
+                    title: '<h4>มีข้อมูลซ้ำ</h4>',
                     showConfirmButton: true,
                     confirmButtonText: 'OK',
                 });
@@ -320,56 +300,7 @@
         });
     }
 
-    
-    // เพิ่มฟังก์ชันเพื่อบันทึกข้อมูลใหม่
-    function saveNewData(event) {
-      event.preventDefault(); // หยุดการส่งค่าฟอร์มทางเบราว์เซอร์
-
-      // ดึงข้อมูลที่ป้อนจากฟอร์มใน modal
-      var id = $('#addId').val();
-      var name = $('#addName').val();
-      var nickname = $('#addNickname').val();
-      var telnum = $('#addTel').val();
-
-      // สร้าง JSON object ที่มีข้อมูลใหม่
-      var newData = {
-        'ไอดี': id,
-        'ชื่อ': name,
-        'ชื่อเล่น': nickname,
-        'เบอร์โทร': telnum
-      };
-
-      // แปลง JSON object เป็น string JSON
-      var jsonData = JSON.stringify(newData);
-
-      // ส่งข้อมูลใหม่ไปยัง Google Apps Script ผ่าน fetch
-      fetch('https://script.google.com/macros/s/AKfycbwQLkv0w7KE3cLbb1DBPwjvG0oWxt-vZmG8D4yzI4omfmSoOkDdsXsQFVbxz1-XCkXZOw/exec', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: jsonData
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('New data saved successfully:', data);
-        // ปิด modal เมื่อบันทึกข้อมูลเสร็จสิ้น
-        $('#addDataModal').modal('hide');
-        // รีโหลดหน้าเพื่อแสดงข้อมูลที่ถูกเพิ่ม
-        location.reload();
-      })
-      .catch(error => {
-        console.error('Error saving new data:', error);
-        // แสดงข้อความแจ้งเตือนหากเกิดข้อผิดพลาดในการบันทึกข้อมูล
-        alert('An error occurred while saving new data. Please try again later.');
-      });
-    }
-
-    // ใช้ jQuery เพื่อระบุเหตุการณ์ที่เกิดขึ้นเมื่อฟอร์มเพิ่มข้อมูลถูกส่ง
-    $(document).ready(function() {
-      $('#addDataForm').submit(saveNewData);
-    });
-
+  
     
 function editData(button) {
   var index = $(button).data('index');
@@ -381,14 +312,14 @@ function editData(button) {
   $('#editDepbook').val(row['แผนก']);
    $('#editCarbook').val(row['รถที่จอง']);
    $('#editLocabook').val(row['สถานที่ๆไปติดต่อ']);
-   $('#editDateoutbook').val(row['วันที่ออก']);
-   $('#editTimeoutbook').val(row['เวลาออก']);
-   $('#editTimeinbook').val(row['เวลาเข้า']);
+   $('#editDateoutbook').val(row['วันที่ใช้รถ']);
+   $('#editTimeoutbook').val(row['ออกเวลา']);
+   $('#editTimeinbook').val(row['เข้าเวลา']);
    $('#editDrivebook').val(row['สถานะการขับ']);
    $('#editOtherbook').val(row['อื่นๆ']);
-   $('#editStatusbook').val(row['สถานะการจอง']);
+  // $('#editStatusbook').val(row['สถานะการจอง']);
    $('#editApproverbook').val(row['อนุมัติโดย']);
-   // $('#editDateout').val(row['เบอร์โทร']);
+   $('#editDateout').val(row['วันที่ใช้รถ']);
    // $('#editTimeout').val(row['เบอร์โทร']);
    // $('#editMileout').val(row['เบอร์โทร']);
    // $('#editDriver').val(row['เบอร์โทร']);
@@ -410,7 +341,7 @@ function editData(button) {
           })
            Swal.showLoading()
       // ดึงข้อมูลที่แก้ไขจาก input ใน modal
-      var editId = $('#editId').val();
+      var id = $('#editId').val();
       var editNamebook = $('#editNamebook').val();
       var editDepbook = $('#editDepbook').val();
       var editCarbook = $('#editCarbook').val();
@@ -426,17 +357,47 @@ function editData(button) {
       var editTimeout = $('#editTimeout').val();
       var editMileout = $('#editMileout').val();
       var editDriver = $('#editDriver').val();
+     
+      
+      if (editTimeout == "") {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: '<h4>กรุณากรอกเวลาออก</h4>',
+          showConfirmButton: true,
+          confirmButtonText: 'OK',
+        });
+        return;
+      } else if (editMileout == "") {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: '<h4>กรุณากรอกเลขไมล์ออก</h4>',
+          showConfirmButton: true,
+          confirmButtonText: 'OK',
+        });
+        return;
+      }  else if (editDriver == "") {
+        Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: '<h4>กรุณาระบุชื่อคนขับ</h4>',
+          showConfirmButton: true,
+          confirmButtonText: 'OK',
+        });
+        return;
+      }
 
       // สร้าง JSON object ที่มีข้อมูลที่แก้ไขแล้ว
       var editedData = {
-        'ไอดี': editId,
+        'ไอดี': id,
         'ชื่อผู้จอง': editNamebook,
         'แผนก': editDepbook,
         'รถที่จอง': editCarbook,
         'สถานที่ๆไปติดต่อ': editLocabook,
-        'วันที่ออก': editDateoutbook,
-        'เวลาออก': editTimeoutbook,
-        'เวลาเข้า': editTimeinbook,
+        'วันที่ใช้รถ': editDateoutbook,
+        'ออกเวลา': editTimeoutbook,
+        'เข้าเวลา': editTimeinbook,
         'สถานะการขับ': editDrivebook,
         'อื่นๆ': editOtherbook,
         'สถานะการจอง': editStatusbook,
@@ -491,20 +452,22 @@ $(document).ready(function() {
       $('#dataTable').empty();
 
       var headerRow = [
-        { title: 'ไอดี', visible: false },
+      
+      { title: 'ไอดี', visible: false },
         { title: 'ชื่อผู้จอง' },
-        { title: 'แผนก' },
+        { title: 'แผนก', visible: false  },
         { title: 'รถที่จอง' },
          { title: 'สถานที่ๆไปติดต่อ' },
-         { title: 'วันที่ออก' },
-         { title: 'เวลาออก' },
-         { title: 'เวลาเข้า' },
-         { title: 'สถานะการขับ' },
-         { title: 'อื่นๆ' },
-         { title: 'สถานะการจอง' },
-         { title: 'อนุมัติโดย' },
+         { title: 'วันที่ใช้รถ' , render: function (data) { return moment(data, 'YYYY-MM-DD').format('DD-MM-YYYY'); }},
+         { title: 'ออกเวลา' },
+         { title: 'เข้าเวลา' },
+         { title: 'สถานะการขับ', visible: false  },
+         { title: 'อื่นๆ', visible: false   },
+         { title: 'สถานะการจอง', visible: false  },
+         { title: 'อนุมัติโดย', visible: false  },
         { title: 'แก้ไข' }
        
+
       ];
       var tableRows = [];
 
@@ -512,22 +475,25 @@ $(document).ready(function() {
         var editButton = '<button type="button" onclick="editData(this);" class="btn btn-success edit-button" data-bs-toggle="modal" data-bs-target="#editModal" data-index="' + index + '" data-row=\'' + JSON.stringify(row) + '\'><i class="fa-solid fa-pen-to-square" style="color: white;"></i></button>';
         var deleteButton = '<button type="button" onclick="deleteData(\'' + row['ไอดี'] + '\');" class="btn btn-danger delete-button"><i class="fa-solid fa-trash-can" style="color: white;"></i></button>';
 
-        var actionButtons = '<div class="btn-group" role="group">' + editButton + deleteButton + '</div>';
-
+        // var actiondeleteButtons = '<div class="btn-group" role="group">' + deleteButton + '</div>';
+        var actioneditButtons = '<div class="btn-group" role="group">' + editButton + '</div>';
+        
         var rowData = [
+         
           row['ไอดี'],
           row['ชื่อผู้จอง'],
           row['แผนก'],
           row['รถที่จอง'],
           row['สถานที่ๆไปติดต่อ'],
-          row['วันที่ออก'],
-          row['เวลาออก'],
-          row['เวลาเข้า'],
+          row['วันที่ใช้รถ'],
+          row['ออกเวลา'],
+          row['เข้าเวลา'],
           row['สถานะการขับ'],
           row['อื่นๆ'],
           row['สถานะการจอง'],
           row['อนุมัติโดย'],
-          actionButtons
+          actioneditButtons
+         
         ];
         tableRows.push(rowData);
       });
@@ -535,7 +501,8 @@ $(document).ready(function() {
       $('#dataTable').DataTable({
         data: tableRows,
         columns: headerRow,
-        dom: 't'
+        dom: 't',
+        order: [[5, 'asc']]
       });
     },
     error: function(xhr, status, error) {
@@ -597,6 +564,7 @@ $(document).ready(function() {
 
 
   </script>
+   <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
 
